@@ -27,7 +27,7 @@ def plot_rastrigin_3d_and_contour():
     
     # Left subplot: 3D plot
     ax1 = fig.add_subplot(121, projection='3d')
-    surf = ax1.plot_surface(X, Y, Z, cmap=cm.viridis, rstride=1, cstride=1, alpha=0.8, edgecolor='none')
+    surf = ax1.plot_surface(X, Y, Z, cmap=cm.viridis, rstride=1, cstride=1, alpha=0.9, edgecolor='none')
     ax1.set_xlabel('X Axis')
     ax1.set_ylabel('Y Axis')
     ax1.set_zlabel('Z Axis')
