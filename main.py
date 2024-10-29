@@ -7,6 +7,7 @@ from calculate_aptitude import evaluate_population, rastrigin_function
 from tournament_parent_selection import tournament_selection
 from sbx_crossover import sbx
 from polynomial_mutation import apply_polinomial_mutation
+from fitness_sharing import fitness_sharing_vectorized
 
 
 """
@@ -32,6 +33,9 @@ def run_ga_optimization(config: dict) -> dict:
         increment_rate = (20 - sbx_dispersion_param) / (generations+(population_size/variables**variables)) if sbx_dispersion_param < 20 else 0
     else:
         increment_rate = 0
+    # Fitness sharing configurations
+    alpha = ga_config.get('alpha', 0)
+    niche_radius = ga_config.get('niche_radius', 0)
        
     # ---------------------------------------------------------------         
     # ALGORITHM EXECUTION
@@ -43,7 +47,11 @@ def run_ga_optimization(config: dict) -> dict:
     for i in range(generations):
         # 1. Calculate aptitude vector of the population  
         aptitude = evaluate_population(population, rastrigin_function)
-        # 1.1 Get the best individual of the current population
+        if alpha > 0 and niche_radius > 0: 
+            # 1.1 Apply fitness sharing to adjust the aptitudes based on niche theory
+            aptitude = fitness_sharing_vectorized(population, aptitude, alpha, niche_radius)
+
+        # 1.2 Get the best individual of the current population
         best_individual = population[np.argmin(aptitude)].copy()
         
         # 2. Select the parents using tournament selection
@@ -90,6 +98,7 @@ ga_config = {
     'mutation_probability_param': 0,
     'distribution_index_param': 20,
     'alpha': 0.5, # for fitness sharing
+    'niche_radius': 0.01, # for fitness sharing
     'dynamic_sbx_increasing': False,
     'early_stop': False,
 }
@@ -105,6 +114,10 @@ print(f'SBX Probability (pc): {ga_config["sbx_prob"]}')
 print(f'SBX Dispersion Parameter (nc): {ga_config["sbx_dispersion_param"]}')
 print(f'Mutation Probability: {ga_config["mutation_probability_param"]}')
 print(f'Distribution Index (nm): {ga_config["distribution_index_param"]}')
+print(f'Fitness Sharing Alpha: {ga_config["alpha"]}')
+print(f'Fitness Sharing Niche Radius: {ga_config["niche_radius"]}')
+print(f'Dynamic SBX increasing: {ga_config["dynamic_sbx_increasing"]}')
+print(f'Early stop: {ga_config["early_stop"]}')
 
 
 # ===============================================================
@@ -136,4 +149,4 @@ print(f'Median: {median}')
 print(f'Worst: {worst}')
 print(f'Standard deviation: {std}')
 
-    
+print(f'\n{"*"*50}')
