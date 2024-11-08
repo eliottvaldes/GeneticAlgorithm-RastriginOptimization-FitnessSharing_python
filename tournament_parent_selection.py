@@ -74,7 +74,7 @@ def tournament_selection(population: np.ndarray, aptitude: np.ndarray) -> np.nda
         idx1 = np.random.randint(num_parents)
         idx2 = np.random.randint(num_parents)
         # Compare the aptitude of the two individuals
-        if aptitude[idx1] < aptitude[idx2]:
+        if aptitude[idx1] > aptitude[idx2]:
             parents[i] = population[idx1]
         else:
             parents[i] = population[idx2]
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     # evaluate the population
     aptitude = evaluate_population(initial_population, langermann_function)
     # get the index of the minimum aptitude - BEST INDIVIDUAL
-    best_index = np.argmin(aptitude)
+    best_index = np.argmax(aptitude)
     
     print(f'Aptitude: {aptitude}')
     print(f'Best index: {best_index}')
