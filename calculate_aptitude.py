@@ -20,28 +20,33 @@ def evaluate_population(population: np.ndarray, objective_function) -> np.ndarra
         aptitude[i] = objective_function(individual)
     return aptitude
 
-
-# define the rastrigin function
-def rastrigin_function(individual: np.ndarray) -> float:
-    x, y = individual
-    term_1 = np.power(x, 2) - 10 * np.cos(10 * np.pi * x)
-    term_2 = np.power(y, 2) - 10 * np.cos(2 * np.pi * y)
-    return 20 + (term_1 + term_2)
+def stock_return(individual: np.ndarray) -> float:
+    # toma en cuenta que mi individuo tiene la forma [x1, x2, x3, x4, x5, x6]
+    x1, x2, x3, x4, x5, x6 = individual
+    # the fixed values for the stock return are:
+    r1 = 0.20
+    r2 = 0.42
+    r3 = 1
+    r4 = 0.5
+    r5 = 0.46
+    r6 = 0.30
     
-    
+    return r1*x1 + r2*x2 + r3*x3 + r4*x4 + r5*x5 + r6*x6
 
 
 if __name__ == '__main__':
     # JUST FOR TESTING
     # GENERAL CONFIGURATIONS
-    population = np.array([[20 , 4.5], [0, 0]])
+    population_zize = 10
+    num_values = 6
+    population = np.random.uniform(0, 0.4, (population_zize, num_values))
     
     # evaluate the population
-    aptitude = evaluate_population(population, rastrigin_function)
+    aptitude = evaluate_population(population, stock_return)
     # get the index of the minimum aptitude
-    best_index = np.argmin(aptitude)
+    best_index = np.argmax(aptitude)
     
     print(f'Population: \n{population}\n')
-    print(f'Aptitude: {aptitude}')
+    print(f'Aptitude: \n{aptitude}')
     print(f'Best index: {best_index}')
     print(f'Best individual: {population[best_index]}')   
